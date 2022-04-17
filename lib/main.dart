@@ -59,7 +59,7 @@ class _MainPageState extends State<MainPage> {
         return LoginScreen(nav: (i) {
           print('from login to people');
           setState(() => {
-            if(i == "people"){currentScreen = Screen.LOGIN} 
+            if(i == "people"){currentScreen = Screen.PEOPLE} 
             else if(i == "register"){currentScreen = Screen.REGISTER} 
             });
         });
