@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../data/http_helper.dart';
 
 enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
 
@@ -16,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //create global ref key for the form
   final _formKey = GlobalKey<FormState>();
   //state value for user login
-  Map<String, dynamic> user = {'email': '', 'pass': ''};
+  Map<String, dynamic> user = {'email': '', 'password': ''};
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               _formKey.currentState!.save();
                               //triggers the onSave in each form field
                               //call the API function to post the data
+                             // print(user);
+                              loginUser(user);
                               //accept the response from the server and
                               //save the token in SharedPreferences
                               //go to the people screen
@@ -139,4 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
+  loginUser(Map<String, dynamic> user)async{
+    HttpHelper helper = HttpHelper();
+    helper.connectUser(user);
+   // User currentUser =  await helper.createUser(user);
+   // print(currentUser.id);
+    
+  }
+
 }
