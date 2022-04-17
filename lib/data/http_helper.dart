@@ -176,9 +176,8 @@ class HttpHelper {
           //got some data
           print('successsss');
           Map<String, dynamic> data = jsonDecode(resp.body);
-          //print(userRegistered['data']['id']);
-          //User currentUser = User.fromJson(userRegistered['data']);
-          print(data);
+          
+          //print(data['data']['attributes']['accessToken']);
           return jsonDecode(resp.body);
           //return currentUser;
           //return jsonDecode(userRegistered['data']['id']);
