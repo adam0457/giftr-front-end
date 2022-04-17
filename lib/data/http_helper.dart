@@ -152,5 +152,41 @@ class HttpHelper {
           throw Exception(msg);
       }
   }
+  Future<Map> connectUser(usr) async{
+      String endpoint = 'auth/tokens';
+        Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
+        Map<String, String> headers = {
+          'x-my-header': 'my name',
+          'content-type': 'application/json', //because we want to send JSON
+        };
+      Map<String, dynamic> connectUser = {
+        'data':{
+        'type':"users",
+        'attributes':usr      
+        }
+        
+      };
+      String body = jsonEncode(connectUser);
 
+      var resp = await http.post(uri, headers: headers, body: body);
+      switch (resp.statusCode) {
+        case 200:
+        case 201:
+          //maybe other codes too
+          //got some data
+          print('successsss');
+          Map<String, dynamic> data = jsonDecode(resp.body);
+          
+          //print(data['data']['attributes']['accessToken']);
+          return jsonDecode(resp.body);
+          //return currentUser;
+          //return jsonDecode(userRegistered['data']['id']);
+        default:
+          Map<String, dynamic> msg = {
+            'code': resp.statusCode,
+            'message': 'Bad things happening. Failed to connect user.',
+          };
+          throw Exception(msg);
+      }
+  }
 }

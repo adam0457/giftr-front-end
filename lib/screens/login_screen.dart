@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../data/http_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
 
@@ -16,7 +18,9 @@ class _LoginScreenState extends State<LoginScreen> {
   //create global ref key for the form
   final _formKey = GlobalKey<FormState>();
   //state value for user login
-  Map<String, dynamic> user = {'email': '', 'pass': ''};
+  Map<String, dynamic> user = {'email': '', 'password': ''};
+  String token = '';
+  
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               _formKey.currentState!.save();
                               //triggers the onSave in each form field
                               //call the API function to post the data
+                             // print(user);
+                              loginUser(user);
+                              saveToken(token);
+                              print('the token has been saved');
+                              getToken();
                               //accept the response from the server and
                               //save the token in SharedPreferences
                               //go to the people screen
@@ -138,5 +147,23 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       },
     );
+  }
+  loginUser(Map<String, dynamic> user)async{
+    HttpHelper helper = HttpHelper();
+    helper.connectUser(user);
+    Map data =  await helper.connectUser(user);
+    token = data['data']['attributes']['accessToken'];    
+  }
+
+  
+void saveToken(jwtoken) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token',jwtoken);
+  }
+
+  void getToken() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? mytoken = prefs.getString('token');
+    print('Hey this is the sucheng ${mytoken}');
   }
 }
