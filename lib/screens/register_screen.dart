@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import '../data/http_helper.dart';
+import '../data/user.dart';
 
-enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
+enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON }
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key, required this.nav}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({Key? key, required this.nav}) : super(key: key);
   Function nav;
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   //create global ref key for the form
   final _formKey = GlobalKey<FormState>();
   //state value for user login
-  Map<String, dynamic> user = {'email': '', 'pass': ''};
+  Map<String, dynamic> user = {'firstName':'','lastName':'', 'email': '', 'password': ''};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Login to Giftr'),
+          leading: IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.home),
+        ),
+          title: Text('The Register Screen'),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -33,6 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    _buildFirstName(),
+                    SizedBox(height: 16),
+                    _buildLastName(),
+                    SizedBox(height: 16),
                     _buildEmail(),
                     SizedBox(height: 16),
                     _buildPassword(),
@@ -41,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          child: Text('Login'),
+                          child: Text('Submit'),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               //validation has been passed so we can save the form
@@ -51,24 +64,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               //accept the response from the server and
                               //save the token in SharedPreferences
                               //go to the people screen
-                              widget.nav("people");
+                              registerUser(user);
+                              widget.nav();
+                              //print("${user['firstName']} ${user['lastName']} ${user['email']} ${user['password']}");
+                            
                             } else {
                               //form failed validation so exit
                               return;
                             }
                           },
                         ),
-                        SizedBox(width: 16.0),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.purple,
-                          ),
-                          child: Text('Sign Up'),
-                          onPressed: () {
-                            //validate then call the API to signup
-                            widget.nav("register");
-                          },
-                        ),
+                      
                       ],
                     ),
                   ]),
@@ -139,4 +145,68 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
+
+  // build the firstname
+  TextFormField _buildFirstName() {
+    return TextFormField(
+      decoration: _styleField('FirstName', ''),
+      controller: firstNameController,
+      obscureText: false,
+      keyboardType: TextInputType.name,
+      textInputAction: TextInputAction.next,
+      style: TextStyle(color: Colors.lightBlue, fontSize: 20),
+      validator: (String? value) {
+        if (value == null || value.isEmpty || value.length < 2) {
+          return 'Please enter something';
+          //becomes the new errorText value
+        }
+        return null; //means all is good
+      },
+      onSaved: (String? value) {
+        
+        setState(() {
+          user['firstName'] = value;
+        });
+      },
+    );
+  }
+
+  // build the lastname
+  TextFormField _buildLastName() {
+
+    return TextFormField(
+      decoration: _styleField('LastName', ''),
+      controller: lastNameController,
+      obscureText: false,
+      keyboardType: TextInputType.name,
+      textInputAction: TextInputAction.next,
+      style: TextStyle(color: Colors.lightBlue, fontSize: 20),
+      validator: (String? value) {
+        if (value == null || value.isEmpty || value.length < 2) {
+          return 'Please enter something';
+          //becomes the new errorText value
+        }
+        return null; //means all is good
+      },
+      onSaved: (String? value) {
+        
+        setState(() {
+          user['lastName'] = value;
+        });
+      },
+    );
+  }
+
+  // void registerUser(Map<String, dynamic> user){
+  //   HttpHelper helper = HttpHelper();
+  //   helper.addUser(user);
+  // }
+
+  registerUser(Map<String, dynamic> user)async{
+    HttpHelper helper = HttpHelper();
+    User currentUser =  await helper.createUser(user);
+    print(currentUser.id);
+    
+  }
+
 }

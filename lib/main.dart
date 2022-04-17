@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_screen/screens/add_person_screen.dart';
+import 'package:flutter_multi_screen/screens/register_screen.dart';
 //screens
 import '../screens/login_screen.dart';
 import '../screens/people_screen.dart';
@@ -8,7 +9,7 @@ import '../screens/add_person_screen.dart';
 import '../screens/add_gift_screen.dart';
 //data and api classes
 
-enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON }
+enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
 
 void main() => runApp(const MyApp());
 
@@ -48,10 +49,19 @@ class _MainPageState extends State<MainPage> {
 
   Widget loadBody(Enum screen) {
     switch (screen) {
-      case Screen.LOGIN:
-        return LoginScreen(nav: () {
+      case Screen.REGISTER:
+        return RegisterScreen(nav: () {
           print('from login to people');
-          setState(() => currentScreen = Screen.PEOPLE);
+          setState(() => currentScreen = Screen.LOGIN);
+        });
+        break;
+      case Screen.LOGIN:
+        return LoginScreen(nav: (i) {
+          print('from login to people');
+          setState(() => {
+            if(i == "people"){currentScreen = Screen.LOGIN} 
+            else if(i == "register"){currentScreen = Screen.REGISTER} 
+            });
         });
         break;
       case Screen.PEOPLE:
