@@ -17,8 +17,8 @@ class PeopleScreen extends StatefulWidget {
       required this.goEdit})
       : super(key: key);
 
-  Function(int, String) goGifts;
-  Function(int, String, DateTime) goEdit;
+  Function(String, String) goGifts;
+  Function(String, String, DateTime) goEdit;
   Function(Enum) logout;
   String? token;
   
@@ -47,7 +47,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
     print(widget.token);
     getPeople(widget.token); 
     //print(people);
-   final myFuture = Future<void>.delayed(Duration(seconds: 5),() => print(people));
+   //final myFuture = Future<void>.delayed(Duration(seconds: 5),() => print(people));
    
     // setState(() {
        // people = data;
@@ -77,48 +77,48 @@ class _PeopleScreenState extends State<PeopleScreen> {
           )
         ],
       ),
-      // body: ListView.builder(
-      //   itemCount: people.length,
-      //   itemBuilder: (context, index) {
-      //     return ListTile(
-      //       //different background colors for birthdays that are past
-      //       tileColor: today.month > people[index]['dob'].month
-      //           ? Colors.black12
-      //           : Colors.white,
-      //       title: Text(people[index]['name']),
-      //       subtitle: Text(DateFormat.MMMd().format(people[index]['dob'])),
-      //       trailing: Row(
-      //         mainAxisSize: MainAxisSize.min,
-      //         children: [
-      //           IconButton(
-      //             icon: Icon(Icons.edit, color: Colors.grey),
-      //             onPressed: () {
-      //               print('edit person $index');
-      //               print('go to the add_person_screen');
-      //               print(people[index]['dob']);
-      //               widget.goEdit(people[index]['id'], people[index]['name'],
-      //                   people[index]['dob']);
-      //             },
-      //           ),
-      //           IconButton(
-      //             icon: Icon(Icons.lightbulb, color: Colors.amber),
-      //             onPressed: () {
-      //               print('view gift ideas for person $index');
-      //               print('go to the gifts_screen');
-      //               widget.goGifts(people[index]['id'], people[index]['name']);
-      //             },
-      //           ),
-      //         ],
-      //       ),
-      //     );
-      //   },
-      // ),
+      body: ListView.builder(
+        itemCount: people.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            //different background colors for birthdays that are past
+            tileColor: today.month > people[index].birthDate.month
+                ? Colors.black12
+                : Colors.white,
+            title: Text(people[index].name),
+            subtitle: Text(DateFormat.MMMd().format(people[index].birthDate)),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit, color: Colors.grey),
+                  onPressed: () {
+                    print('edit person $index');
+                    print('go to the add_person_screen');
+                    print(people[index].birthDate);
+                    widget.goEdit(people[index].id, people[index].name,
+                        people[index].birthDate);
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.lightbulb, color: Colors.amber),
+                  onPressed: () {
+                    print('view gift ideas for person $index');
+                    print('go to the gifts_screen');
+                    widget.goGifts(people[index].id, people[index].name);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           //go to the add gift page
           DateTime now = DateTime.now();
-          widget.goEdit(0, '', now);
+          widget.goEdit('', '', now);
         },
       ),
     );

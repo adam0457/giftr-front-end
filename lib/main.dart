@@ -41,7 +41,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   var currentScreen = Screen.LOGIN;
-  int currentPerson = 0; //use for selecting person for gifts pages.
+  String currentPerson = ''; //use for selecting person for gifts pages.
   String currentPersonName = '';
   DateTime currentPersonDOB = DateTime.now(); //right now as default
   String? token;
@@ -74,7 +74,7 @@ class _MainPageState extends State<MainPage> {
       case Screen.PEOPLE:
         return PeopleScreen(
           token:token,
-          goGifts: (int pid, String name) {
+          goGifts: (String pid, String name) {
             //need another function for going to add/edit screen
             print('from people to gifts for person $pid');
             setState(() {
@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
               currentScreen = Screen.GIFTS;
             });
           },
-          goEdit: (int pid, String name, DateTime dob) {
+          goEdit: (String pid, String name, DateTime dob) {
             //edit the person
             print('go to the person edit screen');
             setState(() {

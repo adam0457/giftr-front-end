@@ -13,7 +13,7 @@ class GiftsScreen extends StatefulWidget {
       required this.currentPersonName})
       : super(key: key);
 
-  int currentPerson; //the id of the current person
+  String currentPerson; //the id of the current person
   String currentPersonName;
   Function(Enum) goPeople;
   Function(Enum) logout;
