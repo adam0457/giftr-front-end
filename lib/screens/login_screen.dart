@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key, required this.nav}) : super(key: key);
-  Function nav;
+  LoginScreen({Key? key, required this.loginUser, required this.goToRegister}) : super(key: key);
+  Function loginUser;
+  Function goToRegister;
+  
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -19,7 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   //state value for user login
   Map<String, dynamic> user = {'email': '', 'password': ''};
+ 
   String token = '';
+  String? jwtFromSP ='initial jwt from sp';
   
 
   @override
@@ -53,14 +57,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               //triggers the onSave in each form field
                               //call the API function to post the data
                              // print(user);
-                              loginUser(user);
-                              saveToken(token);
-                              print('the token has been saved');
-                              getToken();
+                              widget.loginUser(user);
+                              //saveToken(token);
+                              // getToken();
+                              // final myFuture = Future<void>.delayed(Duration(seconds: 3),() => saveToken(token));
+                              // final myFuture2 = Future<void>.delayed(Duration(seconds: 5),() => getToken());
+                              // final myFuture1 = Future<void>.delayed(Duration(seconds: 7),() => print(jwtFromSP));
+                              //print(jwtFromSP);
+                              //print('the token has been saved');
+                              //getToken();
+                              //print(jwtFromSP);
                               //accept the response from the server and
                               //save the token in SharedPreferences
                               //go to the people screen
-                              widget.nav("people");
+                              // widget.nav("people");
                             } else {
                               //form failed validation so exit
                               return;
@@ -75,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text('Sign Up'),
                           onPressed: () {
                             //validate then call the API to signup
-                            widget.nav("register");
+                            // widget.nav("register");
+                            widget.goToRegister();
                           },
                         ),
                       ],
@@ -134,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
       textInputAction: TextInputAction.next,
       style: TextStyle(color: Colors.lightBlue, fontSize: 20),
       validator: (String? value) {
-        if (value == null || value.isEmpty || value.length < 5) {
+        if (value == null || value.isEmpty || value.length < 3) {
           return 'Please enter something';
           //becomes the new errorText value
         }
@@ -148,22 +159,24 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
-  loginUser(Map<String, dynamic> user)async{
-    HttpHelper helper = HttpHelper();
-    helper.connectUser(user);
-    Map data =  await helper.connectUser(user);
-    token = data['data']['attributes']['accessToken'];    
-  }
+
+  // loginUser(Map<String, dynamic> user)async{
+  //   HttpHelper helper = HttpHelper();
+  //   helper.connectUser(user);
+  //   Map data =  await helper.connectUser(user);
+  //   token = data['data']['attributes']['accessToken']; 
+     
+  // }
 
   
-void saveToken(jwtoken) async{
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('token',jwtoken);
-  }
+// void saveToken(jwtoken) async{
+//     final prefs = await SharedPreferences.getInstance();
+//     prefs.setString('token',jwtoken);
+//   }
 
-  void getToken() async{
-    final prefs = await SharedPreferences.getInstance();
-    String? mytoken = prefs.getString('token');
-    print('Hey this is the sucheng ${mytoken}');
-  }
+//   void getToken() async{
+//     final prefs = await SharedPreferences.getInstance();
+//     final String? mytoken = prefs.getString('token');
+//     jwtFromSP = mytoken;
+//   }
 }

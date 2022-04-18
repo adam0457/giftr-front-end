@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_screen/screens/add_person_screen.dart';
 import 'package:flutter_multi_screen/screens/register_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 //screens
 import '../screens/login_screen.dart';
 import '../screens/people_screen.dart';
@@ -8,6 +10,8 @@ import '../screens/gifts_screen.dart';
 import '../screens/add_person_screen.dart';
 import '../screens/add_gift_screen.dart';
 //data and api classes
+import '../data/http_helper.dart';
+import '../data/user.dart';
 
 enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
 
@@ -40,6 +44,8 @@ class _MainPageState extends State<MainPage> {
   int currentPerson = 0; //use for selecting person for gifts pages.
   String currentPersonName = '';
   DateTime currentPersonDOB = DateTime.now(); //right now as default
+  String? token;
+  
 
   // to access variables from MainPage use `widget.`
   @override
@@ -50,22 +56,24 @@ class _MainPageState extends State<MainPage> {
   Widget loadBody(Enum screen) {
     switch (screen) {
       case Screen.REGISTER:
-        return RegisterScreen(nav: () {
-          print('from login to people');
-          setState(() => currentScreen = Screen.LOGIN);
-        });
+        return RegisterScreen(registerUser: registerUser);
+        //   print('from login to people');
+        //   setState(() => currentScreen = Screen.LOGIN);
+        // });
         break;
       case Screen.LOGIN:
-        return LoginScreen(nav: (i) {
-          print('from login to people');
-          setState(() => {
-            if(i == "people"){currentScreen = Screen.PEOPLE} 
-            else if(i == "register"){currentScreen = Screen.REGISTER} 
-            });
-        });
+            return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);
+        // return LoginScreen(nav: (i) {
+        //   print('from login to people');
+        //   setState(() => {
+        //     if(i == "people"){currentScreen = Screen.PEOPLE} 
+        //     else if(i == "register"){currentScreen = Screen.REGISTER} 
+        //     });
+        //});
         break;
       case Screen.PEOPLE:
         return PeopleScreen(
+          token:token,
           goGifts: (int pid, String name) {
             //need another function for going to add/edit screen
             print('from people to gifts for person $pid');
@@ -89,6 +97,7 @@ class _MainPageState extends State<MainPage> {
             //back to people
             setState(() => currentScreen = Screen.LOGIN);
           },
+          
         );
       case Screen.GIFTS:
         return GiftsScreen(
@@ -127,10 +136,35 @@ class _MainPageState extends State<MainPage> {
           currentPersonName: currentPersonName,
         );
       default:
-        return LoginScreen(nav: () {
-          print('from login to people');
-          setState(() => currentScreen = Screen.LOGIN);
-        });
+        return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);
+        // return LoginScreen(nav: () {
+        //   print('from login to people');
+        //   setState(() => currentScreen = Screen.LOGIN);
+        // });
     }
+  }
+
+  registerUser(Map<String, dynamic> user)async{
+    HttpHelper helper = HttpHelper();
+    User currentUser =  await helper.createUser(user); 
+    setState(() => currentScreen = Screen.LOGIN);   
+  }
+
+  goToRegister(){
+    setState(() => currentScreen = Screen.REGISTER);    
+  }
+
+  loginUser(Map<String, dynamic> user)async{
+    HttpHelper helper = HttpHelper();
+    helper.connectUser(user);
+    Map data =  await helper.connectUser(user);
+    token = data['data']['attributes']['accessToken']; 
+    saveToken(token);
+    setState(() => currentScreen = Screen.PEOPLE);
+  }
+
+  void saveToken(jwtoken) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('token',jwtoken);
   }
 }

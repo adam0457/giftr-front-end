@@ -6,8 +6,9 @@ import '../data/user.dart';
 enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON }
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key? key, required this.nav}) : super(key: key);
-  Function nav;
+  RegisterScreen({Key? key, required this.registerUser}) : super(key: key);
+ // Function nav;
+  Function registerUser;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -64,8 +65,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               //accept the response from the server and
                               //save the token in SharedPreferences
                               //go to the people screen
-                              registerUser(user);
-                              widget.nav();
+                              widget.registerUser(user);
+                             // widget.nav();
                               //print("${user['firstName']} ${user['lastName']} ${user['email']} ${user['password']}");
                             
                             } else {
@@ -202,11 +203,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   //   helper.addUser(user);
   // }
 
-  registerUser(Map<String, dynamic> user)async{
-    HttpHelper helper = HttpHelper();
-    User currentUser =  await helper.createUser(user);
-    print(currentUser.id);
+  // registerUser(Map<String, dynamic> user)async{
+  //   HttpHelper helper = HttpHelper();
+  //   User currentUser =  await helper.createUser(user);
+  //   print(currentUser.id);
     
-  }
+  // }
 
 }

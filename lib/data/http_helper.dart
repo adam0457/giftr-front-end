@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import './user.dart';
+import './person.dart';
 
 // https://jsonplaceholder.typicode.com/users
 
@@ -189,4 +190,67 @@ class HttpHelper {
           throw Exception(msg);
       }
   }
+  
+  Future<List<Person>> getListPeople(token) async {
+    String endpoint = 'api/people';
+        Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
+        Map<String, String> headers = {
+          'x-my-header': 'my name',
+          'content-type': 'application/json', //because we want to send JSON
+          'Authorization':'Bearer $token'
+        };  
+      
+      http.Response resp = await http.get(uri,headers: headers);
+      //Map<String, dynamic> resp = jsonDecode(response.body);
+        switch (resp.statusCode) {
+        case 200:
+        case 201:
+          //maybe other codes too
+          //got some data
+          print('good job');
+          Map<String, dynamic> result = jsonDecode(resp.body);
+          //print(result['data']);
+          if(result['data'].length > 0){
+              List<Person> people = result['data'].map<Person>((item){
+              Person person = Person.fromJson(item['attributes']);
+              return person;
+              }).toList();
+              return people;
+          }else {
+              String errorMessage = "You do not have friends in your list";
+              throw Exception(errorMessage);
+          }
+          
+          // print(result);
+          //print(data['data']['attributes']['accessToken']);
+          //return jsonDecode(resp.body);
+          //return currentUser;
+          //return jsonDecode(userRegistered['data']['id']);
+        default:
+          Map<String, dynamic> msg = {
+            'code': resp.statusCode,
+            'message': 'Bad things happening. Failed to connect user.',
+          };
+          throw Exception(msg);
+      }
+
+
+      // if (resp['data']){
+      //     List<Person> people = resp['data'].map<Person>((element){
+      //       Person person = Person.fromJson(element);
+      //       return person;
+      //     }).toList();
+      //     print(people);
+      //     return people;
+      // }else {
+      //   String errorMessage = "Problem when getting the list of people";
+      //   throw Exception(errorMessage);
+      // }
+      
+  }
+
+  
+
+
+
 }
