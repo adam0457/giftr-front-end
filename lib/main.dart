@@ -116,7 +116,8 @@ class _MainPageState extends State<MainPage> {
           currentPersonName: currentPersonName,
           personDOB: currentPersonDOB,
           addPerson:addPerson,
-          editPerson:editPerson
+          editPerson:editPerson,
+          deletePerson:deletePerson
         );
       case Screen.ADDGIFT:
         return AddGiftScreen(
@@ -177,6 +178,11 @@ class _MainPageState extends State<MainPage> {
   editPerson(Map<String, dynamic> person) async {
     HttpHelper helper = HttpHelper();   
     Person personEdited =  await helper.editPerson(person, currentUserId, currentPerson,token);
+  }
+
+  deletePerson() async {
+    HttpHelper helper = HttpHelper();   
+    Person personEdited =  await helper.deletePerson(currentPerson,token);
   }
 
 }

@@ -11,7 +11,8 @@ class AddPersonScreen extends StatefulWidget {
     required this.currentPersonName,
     required this.personDOB,
     required this.addPerson,
-    required this.editPerson
+    required this.editPerson,
+    required this.deletePerson
   }) : super(key: key);
 
   Function nav;
@@ -20,6 +21,7 @@ class AddPersonScreen extends StatefulWidget {
   DateTime personDOB;
   Function addPerson;
   Function editPerson;
+  Function deletePerson;
 
   @override
   State<AddPersonScreen> createState() => _AddPersonScreenState();
@@ -100,8 +102,10 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
                       ),
                       child: Text('Delete'),
                       onPressed: () {
+                        widget.deletePerson();
                         //delete the selected person
                         //needs confirmation dialog
+                        widget.nav(Screen.PEOPLE);
                       },
                     ),
                 ],
