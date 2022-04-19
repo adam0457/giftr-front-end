@@ -10,12 +10,14 @@ class AddPersonScreen extends StatefulWidget {
     required this.currentPerson,
     required this.currentPersonName,
     required this.personDOB,
+    required this.addPerson
   }) : super(key: key);
 
   Function nav;
   String currentPersonName; // could be empty string
   String currentPerson; //could be zero
   DateTime personDOB;
+  Function addPerson;
 
   @override
   State<AddPersonScreen> createState() => _AddPersonScreenState();
@@ -29,7 +31,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //state value for user login
-  Map<String, dynamic> person = {'name': '', 'dob': null};
+  Map<String, dynamic> person = {'name': '', 'dob': ''};
 
   @override
   void initState() {
@@ -59,37 +61,49 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _buildName(),
-            SizedBox(height: 16),
-            _buildDOB(),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  child: Text('Save'),
-                  onPressed: () {
-                    //use the API to save the new person
-                    //go to the people screen
-                    widget.nav(Screen.PEOPLE);
-                  },
-                ),
-                SizedBox(width: 16.0),
-                if (widget.currentPerson != '' )
+          child: Form(
+            key: _formKey,
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              _buildName(),
+              SizedBox(height: 16),
+              _buildDOB(),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                    ),
-                    child: Text('Delete'),
+                    child: Text('Save'),
                     onPressed: () {
-                      //delete the selected person
-                      //needs confirmation dialog
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                            //use the API to save the new person
+                          //go to the people screen
+                          //print(person);
+                          widget.addPerson(person);
+                          widget.nav(Screen.PEOPLE);
+                      }else {
+                                //form failed validation so exit
+                                return;
+                              }
+                      
                     },
                   ),
-              ],
-            ),
-          ]),
+                  SizedBox(width: 16.0),
+                  if (widget.currentPerson != '' )
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                      ),
+                      child: Text('Delete'),
+                      onPressed: () {
+                        //delete the selected person
+                        //needs confirmation dialog
+                      },
+                    ),
+                ],
+              ),
+            ]),
+          ),
         ),
       ),
     );
@@ -113,6 +127,8 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
     );
   }
 
+ 
+
   TextFormField _buildName() {
     return TextFormField(
       decoration: _styleField('Person Name', 'person name', false),
@@ -125,7 +141,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
         if (value == null || value.isEmpty) {
           return 'Please enter a name';
           //becomes the new errorText value
-        }
+        }        
         return null; //means all is good
       },
       onSaved: (String? value) {

@@ -12,6 +12,7 @@ import '../screens/add_gift_screen.dart';
 //data and api classes
 import '../data/http_helper.dart';
 import '../data/user.dart';
+import '../data/person.dart';
 
 enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
 
@@ -45,6 +46,7 @@ class _MainPageState extends State<MainPage> {
   String currentPersonName = '';
   DateTime currentPersonDOB = DateTime.now(); //right now as default
   String? token;
+  String? currentUserId;
   
 
   // to access variables from MainPage use `widget.`
@@ -57,25 +59,14 @@ class _MainPageState extends State<MainPage> {
     switch (screen) {
       case Screen.REGISTER:
         return RegisterScreen(registerUser: registerUser);
-        //   print('from login to people');
-        //   setState(() => currentScreen = Screen.LOGIN);
-        // });
         break;
       case Screen.LOGIN:
-            return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);
-        // return LoginScreen(nav: (i) {
-        //   print('from login to people');
-        //   setState(() => {
-        //     if(i == "people"){currentScreen = Screen.PEOPLE} 
-        //     else if(i == "register"){currentScreen = Screen.REGISTER} 
-        //     });
-        //});
+            return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);       
         break;
       case Screen.PEOPLE:
         return PeopleScreen(
           token:token,
-          goGifts: (String pid, String name) {
-            //need another function for going to add/edit screen
+          goGifts: (String pid, String name) {           
             print('from people to gifts for person $pid');
             setState(() {
               currentPerson = pid;
@@ -124,6 +115,7 @@ class _MainPageState extends State<MainPage> {
           currentPerson: currentPerson,
           currentPersonName: currentPersonName,
           personDOB: currentPersonDOB,
+          addPerson:addPerson
         );
       case Screen.ADDGIFT:
         return AddGiftScreen(
@@ -161,10 +153,23 @@ class _MainPageState extends State<MainPage> {
     token = data['data']['attributes']['accessToken']; 
     saveToken(token);
     setState(() => currentScreen = Screen.PEOPLE);
+    getCurrentUser(token);
+  }
+
+  getCurrentUser(token) async{
+    HttpHelper helper = HttpHelper();
+    Map result = await helper.getLoggedInUser(token);
+    currentUserId = result['id'];    
   }
 
   void saveToken(jwtoken) async{
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('token',jwtoken);
+  }
+
+  addPerson(Map<String, dynamic> person) async{
+    HttpHelper helper = HttpHelper();
+    Person newPerson =  await helper.createPerson(person,currentUserId,token); 
+    print(newPerson);
   }
 }

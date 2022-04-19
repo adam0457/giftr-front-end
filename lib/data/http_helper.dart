@@ -196,7 +196,7 @@ class HttpHelper {
         Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
         Map<String, String> headers = {
           'x-my-header': 'my name',
-          'content-type': 'application/json', //because we want to send JSON
+          //'content-type': 'application/json', //because we want to send JSON
           'Authorization':'Bearer $token'
         };  
       
@@ -216,10 +216,12 @@ class HttpHelper {
               return person;
               }).toList();
               return people;
-          }else {
-              String errorMessage = "You do not have friends in your list";
-              throw Exception(errorMessage);
-          }
+          } 
+          return  <Person> [];       
+          // else {
+          //     String errorMessage = "You do not have friends in your list";
+          //     throw Exception(errorMessage);
+          // }
           
           // print(result);
           //print(data['data']['attributes']['accessToken']);
@@ -232,25 +234,74 @@ class HttpHelper {
             'message': 'Bad things happening. Failed to connect user.',
           };
           throw Exception(msg);
-      }
-
-
-      // if (resp['data']){
-      //     List<Person> people = resp['data'].map<Person>((element){
-      //       Person person = Person.fromJson(element);
-      //       return person;
-      //     }).toList();
-      //     print(people);
-      //     return people;
-      // }else {
-      //   String errorMessage = "Problem when getting the list of people";
-      //   throw Exception(errorMessage);
-      // }
+      }     
       
   }
 
-  
+  Future<Map> getLoggedInUser(token) async{
+      String endpoint = 'auth/users/me';
+        Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
+        Map<String, String> headers = {
+          'x-my-header': 'adam0457 eshwar',
+          'content-type': 'application/json', //because we want to send JSON
+          'Authorization':'Bearer $token'
+        };  
+      
+      http.Response resp = await http.get(uri,headers: headers);
+        switch (resp.statusCode) {
+        case 200:
+        case 201:      
+          Map<String, dynamic> result = jsonDecode(resp.body);
+          return result['data'];        
+        default:
+          Map<String, dynamic> msg = {
+            'code': resp.statusCode,
+            'message': 'Bad things happening. Failed to get the user.',
+          };
+          throw Exception(msg);
+  }
+  }
 
+  Future<Person> createPerson(newPerson,userId, token) async{
+      String endpoint = 'api/people';
+        Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
+        Map<String, String> headers = {
+          'x-my-header': 'adam0457 Eswhar',
+          'content-type': 'application/json', //because we want to send JSON
+          'Authorization':'Bearer $token'
+        };
+      Map<String, dynamic> person = {
+        'data':{
+        'type':"people",
+        'attributes': {
+          'name':newPerson['name'],
+          'birthDate':newPerson['dob'],
+          'owner':userId,
 
+        }
+        }
+        
+      };
+      String body = jsonEncode(person);
+
+      var resp = await http.post(uri, headers: headers, body: body);
+      switch (resp.statusCode) {
+        case 200:
+        case 201:    
+        
+          Map<String, dynamic> result = jsonDecode(resp.body);
+            print(result['data']['attributes']);
+            Person personCreated = Person.fromJson(result['data']['attributes']);
+            // return jsonDecode(resp.body);
+            return personCreated;
+            //return jsonDecode(userRegistered['data']['id']);
+        default:
+          Map<String, dynamic> msg = {
+            'code': resp.statusCode,
+            'message': 'Bad things happening. Failed to create this person.',
+          };
+          throw Exception(msg);
+      }
+  }
 
 }
