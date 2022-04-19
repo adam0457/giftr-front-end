@@ -10,7 +10,8 @@ class AddPersonScreen extends StatefulWidget {
     required this.currentPerson,
     required this.currentPersonName,
     required this.personDOB,
-    required this.addPerson
+    required this.addPerson,
+    required this.editPerson
   }) : super(key: key);
 
   Function nav;
@@ -18,6 +19,7 @@ class AddPersonScreen extends StatefulWidget {
   String currentPerson; //could be zero
   DateTime personDOB;
   Function addPerson;
+  Function editPerson;
 
   @override
   State<AddPersonScreen> createState() => _AddPersonScreenState();
@@ -78,8 +80,10 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
                         _formKey.currentState!.save();
                             //use the API to save the new person
                           //go to the people screen
-                          //print(person);
-                          widget.addPerson(person);
+                          print(person);
+                          widget.currentPersonName.isEmpty
+                          ? widget.addPerson(person)
+                          :widget.editPerson(person);
                           widget.nav(Screen.PEOPLE);
                       }else {
                                 //form failed validation so exit

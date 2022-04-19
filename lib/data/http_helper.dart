@@ -304,4 +304,48 @@ class HttpHelper {
       }
   }
 
+   Future<Person> editPerson(personEdited, userId, personId, token) async{
+      String endpoint = 'api/people/$personId';
+        Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
+        Map<String, String> headers = {
+          'x-my-header': 'adam0457 Eswhar',
+          'content-type': 'application/json', //because we want to send JSON
+          'Authorization':'Bearer $token'
+        };
+      Map<String, dynamic> person = {
+        'data':{
+        'type':"people",
+        'attributes': {
+          'name':personEdited['name'],
+          'birthDate':personEdited['dob'],
+          'owner':userId,
+
+        }
+        }
+        
+      };
+      String body = jsonEncode(person);
+
+      var resp = await http.patch(uri, headers: headers, body: body);
+      switch (resp.statusCode) {
+        case 200:
+        case 201:    
+        
+          Map<String, dynamic> result = jsonDecode(resp.body);
+            print(result['data']['attributes']);
+            Person personCreated = Person.fromJson(result['data']['attributes']);
+            // return jsonDecode(resp.body);
+            return personCreated;
+            //return jsonDecode(userRegistered['data']['id']);
+        default:
+          Map<String, dynamic> msg = {
+            'code': resp.statusCode,
+            'message': 'Bad things happening. Failed to create this person.',
+          };
+          throw Exception(msg);
+      }
+  }
+
+
+
 }
