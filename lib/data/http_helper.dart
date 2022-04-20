@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import './user.dart';
 import './person.dart';
+import './gift.dart';
 
 // https://jsonplaceholder.typicode.com/users
 
@@ -353,20 +354,7 @@ class HttpHelper {
           'x-my-header': 'adam0457 Eswhar',
           'content-type': 'application/json', //because we want to send JSON
           'Authorization':'Bearer $token'
-        };
-      // Map<String, dynamic> person = {
-      //   'data':{
-      //   'type':"people",
-      //   'attributes': {
-      //     'name':personEdited['name'],
-      //     'birthDate':personEdited['dob'],
-      //     'owner':userId,
-
-      //   }
-      //   }
-        
-      // };
-     // String body = jsonEncode(person);
+        };      
 
       var resp = await http.delete(uri, headers: headers);
       switch (resp.statusCode) {
@@ -386,8 +374,43 @@ class HttpHelper {
           };
           throw Exception(msg);
       }
-  }
 
+
+  }
+  
+  Future<List<Gift>> getListGifts(personId,token) async {
+    String endpoint = 'api/people/$personId/gifts';
+        Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
+        Map<String, String> headers = {
+          'x-my-header': 'my name',
+          'Authorization':'Bearer $token'
+        };  
+      
+      http.Response resp = await http.get(uri,headers: headers);
+        switch (resp.statusCode) {
+        case 200:
+        case 201:          
+          print('good job');
+          Map<String, dynamic> result = jsonDecode(resp.body);
+          //print(result['data']);
+          if(result['data'].length > 0){
+              List<Gift> gifts = result['data'].map<Gift>((item){
+              Gift gift = Gift.fromJson(item);
+              return gift;
+              }).toList();
+              return gifts;
+          } 
+          return  <Gift> [];       
+        
+        default:
+          Map<String, dynamic> msg = {
+            'code': resp.statusCode,
+            'message': 'Bad things happening. Failed to connect user.',
+          };
+          throw Exception(msg);
+      }     
+      
+  }
 
 
 }

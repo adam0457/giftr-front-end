@@ -92,6 +92,7 @@ class _MainPageState extends State<MainPage> {
         );
       case Screen.GIFTS:
         return GiftsScreen(
+           token:token,
             goPeople: (Enum screen) {
               //back to people
               setState(() => currentScreen = Screen.PEOPLE);
@@ -131,10 +132,7 @@ class _MainPageState extends State<MainPage> {
         );
       default:
         return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);
-        // return LoginScreen(nav: () {
-        //   print('from login to people');
-        //   setState(() => currentScreen = Screen.LOGIN);
-        // });
+      
     }
   }
 
