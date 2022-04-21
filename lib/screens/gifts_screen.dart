@@ -93,7 +93,19 @@ class _GiftsScreenState extends State<GiftsScreen> {
                   // End of the bloc that was working fine
                   IconButton(
                     icon:Icon(Icons.delete, color: Colors.redAccent),
-                    onPressed: ()=>askConfirmation(index),                  
+                    onPressed: (){
+                                      Future<String?> decision = askConfirmation();
+                                      decision.then((value){
+                                        if(value == 'Yes'){
+                                            widget.deleteGift(gifts[index].id);                                                      
+                                          setState(() {                                                                                        
+                                            gifts = gifts
+                                                .where((gift) => gift.id != gifts[index].id)
+                                                .toList();
+                                          });
+                                        }
+                                      });
+                                  },                  
                     
                     ),
                   
@@ -122,7 +134,7 @@ getGifts(token)async{
     });    
   }
 
-  Future<String?>  askConfirmation(int index) async{
+  Future<String?>  askConfirmation() async{
       return showDialog<String>(
                                                 context: context,
                                                 builder: (BuildContext context) => AlertDialog(
@@ -135,17 +147,10 @@ getGifts(token)async{
                                                     ),
                                                     TextButton(
                                                       onPressed: () {
-                                                        Navigator.pop(context, 'OK');
-                                                        print('wonderful');
-                                                        widget.deleteGift(gifts[index].id);                    
-                                                            setState(() {
-                                                              
-                                                              gifts = gifts
-                                                                  .where((gift) => gift.id != gifts[index].id)
-                                                                  .toList();
-                                                            });
+                                                          Navigator.pop(context, 'Yes');
+                                                         // print('wonderful');                                                        
                                                         },
-                                                      child: const Text('OK'),
+                                                      child: const Text('Yes'),
                                                     ),
                                                   ],
                                                 ),
