@@ -53,11 +53,14 @@ class HttpHelper {
       Map<String, dynamic> connectUser = {
         'data':{
         'type':"users",
-        'attributes':usr      
+        'attributes':{
+          'email': usr['email'],
+          'password': usr['password']
+        }      
         }
         
       };
-      String body = jsonEncode(connectUser);
+      String body = jsonEncode(connectUser);      
 
       var resp = await http.post(uri, headers: headers, body: body);
       switch (resp.statusCode) {

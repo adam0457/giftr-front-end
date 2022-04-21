@@ -18,9 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //create global ref key for the form
   final _formKey = GlobalKey<FormState>();
   //state value for user login
-  Map<String, dynamic> user = {'email': '', 'password': ''}; 
-  //String token = '';
-  //String? jwtFromSP ='initial jwt from sp';
+  Map<String, dynamic> user = {'email': '', 'password': ''};  
   
 
   @override

@@ -7,6 +7,7 @@ class RegisterScreen extends StatefulWidget {
   RegisterScreen({Key? key, required this.registerUser}) : super(key: key);
   Function registerUser;
 
+
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -57,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (_formKey.currentState!.validate()) {
                             
                               _formKey.currentState!.save();                             
-                              widget.registerUser(user);                            
+                              widget.registerUser(user);                               
                             
                             } else {
                               //form failed validation so exit

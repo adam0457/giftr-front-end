@@ -138,8 +138,8 @@ class _MainPageState extends State<MainPage> {
 
   registerUser(Map<String, dynamic> user)async{
     HttpHelper helper = HttpHelper();
-    User currentUser =  await helper.createUser(user); 
-    setState(() => currentScreen = Screen.LOGIN);   
+    User currentUser =  await helper.createUser(user);     
+    loginUser(user);  
   }
 
   goToRegister(){
