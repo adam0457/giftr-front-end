@@ -77,18 +77,27 @@ class _GiftsScreenState extends State<GiftsScreen> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.redAccent),
-                    onPressed: () {
-                      widget.deleteGift(gifts[index].id);                    
-                      setState(() {
+                  //This bloc is working fine
+                  // IconButton(
+                  //   icon: Icon(Icons.delete, color: Colors.redAccent),
+                  //   onPressed: () {
+                  //     widget.deleteGift(gifts[index].id);                    
+                  //     setState(() {
                         
-                        gifts = gifts
-                            .where((gift) => gift.id != gifts[index].id)
-                            .toList();
-                      });
-                    },
-                  ),
+                  //       gifts = gifts
+                  //           .where((gift) => gift.id != gifts[index].id)
+                  //           .toList();
+                  //     });
+                  //   },
+                  // ),
+                  // End of the bloc that was working fine
+                  IconButton(
+                    icon:Icon(Icons.delete, color: Colors.redAccent),
+                    onPressed: ()=>askConfirmation(index),                  
+                    
+                    ),
+                  
+                  //End of what I have added
                 ],
               ),
             );
@@ -105,13 +114,42 @@ class _GiftsScreenState extends State<GiftsScreen> {
     );
   }
 
- getGifts(token)async{
+getGifts(token)async{
     List<Gift> result = await helper.getListGifts(widget.currentPerson,token); 
     //print(result);   
     setState(() {
       gifts = result;
-    });
-    
+    });    
+  }
+
+  Future<String?>  askConfirmation(int index) async{
+      return showDialog<String>(
+                                                context: context,
+                                                builder: (BuildContext context) => AlertDialog(
+                                                  title: const Text('AlertDialog Title'),
+                                                  content: const Text('AlertDialog description'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                                                      child: const Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context, 'OK');
+                                                        print('wonderful');
+                                                        widget.deleteGift(gifts[index].id);                    
+                                                            setState(() {
+                                                              
+                                                              gifts = gifts
+                                                                  .where((gift) => gift.id != gifts[index].id)
+                                                                  .toList();
+                                                            });
+                                                        },
+                                                      child: const Text('OK'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ); 
   }
 
 }
