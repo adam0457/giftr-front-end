@@ -10,12 +10,20 @@ class AddPersonScreen extends StatefulWidget {
     required this.currentPerson,
     required this.currentPersonName,
     required this.personDOB,
+    required this.addPerson,
+    required this.editPerson,
+    required this.deletePerson,
+    required this.logout
   }) : super(key: key);
 
   Function nav;
   String currentPersonName; // could be empty string
-  int currentPerson; //could be zero
+  String currentPerson; //could be zero
   DateTime personDOB;
+  Function addPerson;
+  Function editPerson;
+  Function deletePerson;
+  Function logout;
 
   @override
   State<AddPersonScreen> createState() => _AddPersonScreenState();
@@ -29,7 +37,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //state value for user login
-  Map<String, dynamic> person = {'name': '', 'dob': null};
+  Map<String, dynamic> person = {'name': '', 'dob': ''};
 
   @override
   void initState() {
@@ -59,37 +67,54 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _buildName(),
-            SizedBox(height: 16),
-            _buildDOB(),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  child: Text('Save'),
-                  onPressed: () {
-                    //use the API to save the new person
-                    //go to the people screen
-                    widget.nav(Screen.PEOPLE);
-                  },
-                ),
-                SizedBox(width: 16.0),
-                if (widget.currentPerson > 0)
+          child: Form(
+            key: _formKey,
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              _buildName(),
+              SizedBox(height: 16),
+              _buildDOB(),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                    ),
-                    child: Text('Delete'),
+                    child: Text('Save'),
                     onPressed: () {
-                      //delete the selected person
-                      //needs confirmation dialog
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();                           
+                          widget.currentPersonName.isEmpty
+                          ? widget.addPerson(person)
+                          :widget.editPerson(person);
+                          widget.nav(Screen.PEOPLE);
+                      }else {
+                                //form failed validation so exit
+                                return;
+                              }
+                      
                     },
                   ),
-              ],
-            ),
-          ]),
+                  SizedBox(width: 16.0),
+                  if (widget.currentPerson != '' )
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red,
+                      ),
+                      child: Text('Delete'),
+                      onPressed: (){
+                                      Future<String?> decision = askConfirmation();
+                                      decision.then((value){
+                                        if(value == 'Yes'){
+                                          widget.deletePerson(); 
+                                          widget.nav(Screen.PEOPLE);                                                     
+                                          
+                                        }
+                                      });
+                                  },  
+                    ),
+                ],
+              ),
+            ]),
+          ),
         ),
       ),
     );
@@ -113,6 +138,8 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
     );
   }
 
+
+
   TextFormField _buildName() {
     return TextFormField(
       decoration: _styleField('Person Name', 'person name', false),
@@ -125,11 +152,10 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
         if (value == null || value.isEmpty) {
           return 'Please enter a name';
           //becomes the new errorText value
-        }
+        }        
         return null; //means all is good
       },
-      onSaved: (String? value) {
-        //save the email value in the state variable
+      onSaved: (String? value) {       
         setState(() {
           person['name'] = value;
         });
@@ -170,12 +196,36 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
         }
         return null; //means all is good
       },
-      onSaved: (String? value) {
-        //save the email value in the state variable
+      onSaved: (String? value) {       
         setState(() {
           person['dob'] = value;
         });
       },
     );
   }
+
+
+   Future<String?>  askConfirmation() async{
+      return showDialog<String>(
+                                                context: context,
+                                                builder: (BuildContext context) => AlertDialog(
+                                                  title: const Text('Delete Confirmation'),
+                                                  content: const Text('Are you sure you want to delete this person?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                                                      child: const Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                          Navigator.pop(context, 'Yes');                                                                                                               
+                                                        },
+                                                      child: const Text('Yes'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ); 
+  }
+
+
 }

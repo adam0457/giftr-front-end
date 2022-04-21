@@ -3,11 +3,10 @@ import 'dart:async';
 import '../data/http_helper.dart';
 import '../data/user.dart';
 
-enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON }
-
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key? key, required this.nav}) : super(key: key);
-  Function nav;
+  RegisterScreen({Key? key, required this.registerUser}) : super(key: key);
+  Function registerUser;
+
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -57,16 +56,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: Text('Submit'),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              //validation has been passed so we can save the form
-                              _formKey.currentState!.save();
-                              //triggers the onSave in each form field
-                              //call the API function to post the data
-                              //accept the response from the server and
-                              //save the token in SharedPreferences
-                              //go to the people screen
-                              registerUser(user);
-                              widget.nav();
-                              //print("${user['firstName']} ${user['lastName']} ${user['email']} ${user['password']}");
+                            
+                              _formKey.currentState!.save();                             
+                              widget.registerUser(user);                               
                             
                             } else {
                               //form failed validation so exit
@@ -138,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return null; //means all is good
       },
       onSaved: (String? value) {
-        //save the email value in the state variable
+      
         setState(() {
           user['password'] = value;
         });
@@ -195,18 +187,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
       },
     );
-  }
-
-  // void registerUser(Map<String, dynamic> user){
-  //   HttpHelper helper = HttpHelper();
-  //   helper.addUser(user);
-  // }
-
-  registerUser(Map<String, dynamic> user)async{
-    HttpHelper helper = HttpHelper();
-    User currentUser =  await helper.createUser(user);
-    print(currentUser.id);
-    
-  }
+  } 
 
 }
