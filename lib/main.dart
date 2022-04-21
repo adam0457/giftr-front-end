@@ -136,8 +136,16 @@ class _MainPageState extends State<MainPage> {
 
   registerUser(Map<String, dynamic> user)async{
     HttpHelper helper = HttpHelper();
-    User currentUser =  await helper.createUser(user);     
-    loginUser(user);  
+    try{
+        User currentUser =  await helper.createUser(user);     
+        loginUser(user);  
+    }catch(err){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));   
+    }
+  
   }
 
   goToRegister(){
@@ -146,12 +154,20 @@ class _MainPageState extends State<MainPage> {
 
   loginUser(Map<String, dynamic> user)async{
     HttpHelper helper = HttpHelper();
-    helper.connectUser(user);
-    Map data =  await helper.connectUser(user);
-    token = data['data']['attributes']['accessToken']; 
-    saveToken(token);
-    setState(() => currentScreen = Screen.PEOPLE);
-    getCurrentUser(token);
+    //helper.connectUser(user);
+    try{
+        Map data =  await helper.connectUser(user);
+        token = data['data']['attributes']['accessToken']; 
+        saveToken(token);
+        setState(() => currentScreen = Screen.PEOPLE);
+        getCurrentUser(token);
+    }catch(err){    
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));
+      }
+  
   }
 
   logout(){
@@ -164,8 +180,16 @@ class _MainPageState extends State<MainPage> {
 
   getCurrentUser(token) async{
     HttpHelper helper = HttpHelper();
-    Map result = await helper.getLoggedInUser(token);
-    currentUserId = result['id'];    
+    try{
+        Map result = await helper.getLoggedInUser(token);
+        currentUserId = result['id']; 
+    }catch(err){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));
+    }
+      
   }
 
   void saveToken(jwtoken) async{
@@ -175,27 +199,67 @@ class _MainPageState extends State<MainPage> {
 
   addPerson(Map<String, dynamic> person) async{
     HttpHelper helper = HttpHelper();
-    Person newPerson =  await helper.createPerson(person,currentUserId,token);   
+    try{
+        Person newPerson =  await helper.createPerson(person,currentUserId,token);  
+    }catch(err){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));
+    }
+    
   }
 
   editPerson(Map<String, dynamic> person) async {
-    HttpHelper helper = HttpHelper();   
-    Person personEdited =  await helper.editPerson(person, currentUserId, currentPerson,token);
+    HttpHelper helper = HttpHelper();  
+  try{
+      Person personEdited =  await helper.editPerson(person, currentUserId, currentPerson,token);
+  }catch(err){
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));
+  }
+    
   }
 
   deletePerson() async {
-    HttpHelper helper = HttpHelper();   
-    Person personEdited =  await helper.deletePerson(currentPerson,token);
+    HttpHelper helper = HttpHelper(); 
+    try{
+      Person personEdited =  await helper.deletePerson(currentPerson,token);
+    }catch(err){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));
+    }  
+    
   }
 
   addGift(Map<String, dynamic> gift) async{
-    HttpHelper helper = HttpHelper();     
-      await helper.createGift(gift,currentPerson,token);   
+    HttpHelper helper = HttpHelper(); 
+      try{
+          await helper.createGift(gift,currentPerson,token);
+      }catch(err){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));
+      }    
+      
   }
 
   deleteGift(String giftId) async{   
-    HttpHelper helper = HttpHelper();   
-    await helper.deleteGift(currentPerson, giftId,token);
+    HttpHelper helper = HttpHelper(); 
+    try{
+        await helper.deleteGift(currentPerson, giftId,token);
+    }catch(err){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(err.toString()),
+      ));
+    }  
+    
     
   }
 

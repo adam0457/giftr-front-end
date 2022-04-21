@@ -29,6 +29,9 @@ class _PeopleScreenState extends State<PeopleScreen> {
   List<Person> people = <Person>[];
 
   DateTime today = DateTime.now();
+  
+  String todayInString = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+  
   String? jwt = "Initial value of jwt";
   HttpHelper helper = HttpHelper();
   void initState() {
@@ -40,7 +43,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
   Widget build(BuildContext context) {
     //code here runs for every build
     //someObjects.sort((a, b) => a.someProperty.compareTo(b.someProperty));
-    //people.sort((a, b) => a['dob'].month.compareTo(b['dob'].month));
+    people.sort((a, b) => a.birthDate.month.compareTo(b.birthDate.month));
     //sort the people by the month of birth
 
     return Scaffold(
@@ -61,8 +64,8 @@ class _PeopleScreenState extends State<PeopleScreen> {
         itemCount: people.length,
         itemBuilder: (context, index) {
           return ListTile(
-            //different background colors for birthdays that are past
-            tileColor: today.month > people[index].birthDate.month
+          
+            tileColor: today.month >= people[index].birthDate.month && DateTime.parse(todayInString).day >= DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(people[index].birthDate)).day
                 ? Colors.black12
                 : Colors.white,
             title: Text(people[index].name),

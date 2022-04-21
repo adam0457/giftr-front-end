@@ -123,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       textInputAction: TextInputAction.next,
       style: TextStyle(color: Colors.lightBlue, fontSize: 20),
       validator: (String? value) {
-        if (value == null || value.isEmpty || value.length < 5) {
+        if (value == null || value.isEmpty || value.length < 3) {
           return 'Please enter something';
           //becomes the new errorText value
         }
