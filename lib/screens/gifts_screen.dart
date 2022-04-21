@@ -13,6 +13,7 @@ class GiftsScreen extends StatefulWidget {
       required this.goPeople,
       required this.logout,
       required this.addGift,
+      required this.deleteGift,
       required this.currentPerson,
       required this.currentPersonName})
       : super(key: key);
@@ -22,6 +23,7 @@ class GiftsScreen extends StatefulWidget {
   Function(Enum) goPeople;
   Function(Enum) logout;
   Function addGift;
+  Function deleteGift;
   String? token;
 
   @override
@@ -78,12 +80,9 @@ class _GiftsScreenState extends State<GiftsScreen> {
                   IconButton(
                     icon: Icon(Icons.delete, color: Colors.redAccent),
                     onPressed: () {
-                      print('delete ${gifts[index].name}');
-                      //remove from gifts with setState
+                      widget.deleteGift(gifts[index].id);                    
                       setState(() {
-                        // list.where(func).toList()
-                        // is like JS array.filter(func)
-                        //real app needs to use API to do this.
+                        
                         gifts = gifts
                             .where((gift) => gift.id != gifts[index].id)
                             .toList();

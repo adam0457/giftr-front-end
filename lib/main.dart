@@ -45,6 +45,7 @@ class _MainPageState extends State<MainPage> {
   DateTime currentPersonDOB = DateTime.now(); //right now as default
   String? token;
   String? currentUserId;
+  
 
   
   @override
@@ -101,6 +102,7 @@ class _MainPageState extends State<MainPage> {
               //delete gift idea and update state
               setState(() => currentScreen = Screen.ADDGIFT);
             },
+            deleteGift: deleteGift,
             currentPerson: currentPerson,
             currentPersonName: currentPersonName);
 
@@ -183,6 +185,12 @@ class _MainPageState extends State<MainPage> {
   addGift(Map<String, dynamic> gift) async{
     HttpHelper helper = HttpHelper();     
       await helper.createGift(gift,currentPerson,token);   
+  }
+
+  deleteGift(String giftId) async{   
+    HttpHelper helper = HttpHelper();   
+    await helper.deleteGift(currentPerson, giftId,token);
+    
   }
 
 }

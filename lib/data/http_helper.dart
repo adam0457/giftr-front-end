@@ -323,4 +323,32 @@ class HttpHelper {
       }
   }
 
+
+  Future<void> deleteGift(personId,giftId, token) async{
+      String endpoint = 'api/people/$personId/gifts/$giftId';
+        Uri uri = Uri.http(domain,endpoint); 
+        Map<String, String> headers = {
+          'x-my-header': 'adam0457 Eswhar',
+          'content-type': 'application/json', 
+          'Authorization':'Bearer $token'
+        };      
+
+      var resp = await http.delete(uri, headers: headers);
+      switch (resp.statusCode) {
+        case 200:
+        case 201:
+                print('The gift has been deleted');
+          
+            break;         
+        default:
+          Map<String, dynamic> msg = {
+            'code': resp.statusCode,
+            'message': 'Bad things happening. Failed to delete this gift.',
+          };
+          throw Exception(msg);
+      }
+
+
+  }
+
 }
