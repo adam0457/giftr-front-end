@@ -98,12 +98,16 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
                         primary: Colors.red,
                       ),
                       child: Text('Delete'),
-                      onPressed: () {
-                        widget.deletePerson();
-                        //delete the selected person
-                        //needs confirmation dialog
-                        widget.nav(Screen.PEOPLE);
-                      },
+                      onPressed: (){
+                                      Future<String?> decision = askConfirmation();
+                                      decision.then((value){
+                                        if(value == 'Yes'){
+                                          widget.deletePerson(); 
+                                          widget.nav(Screen.PEOPLE);                                                     
+                                          
+                                        }
+                                      });
+                                  },  
                     ),
                 ],
               ),
@@ -197,4 +201,29 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
       },
     );
   }
+
+
+   Future<String?>  askConfirmation() async{
+      return showDialog<String>(
+                                                context: context,
+                                                builder: (BuildContext context) => AlertDialog(
+                                                  title: const Text('Delete Confirmation'),
+                                                  content: const Text('Are you sure you want to delete this person?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                                                      child: const Text('Cancel'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                          Navigator.pop(context, 'Yes');                                                                                                               
+                                                        },
+                                                      child: const Text('Yes'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ); 
+  }
+
+
 }

@@ -77,20 +77,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  //This bloc is working fine
-                  // IconButton(
-                  //   icon: Icon(Icons.delete, color: Colors.redAccent),
-                  //   onPressed: () {
-                  //     widget.deleteGift(gifts[index].id);                    
-                  //     setState(() {
-                        
-                  //       gifts = gifts
-                  //           .where((gift) => gift.id != gifts[index].id)
-                  //           .toList();
-                  //     });
-                  //   },
-                  // ),
-                  // End of the bloc that was working fine
+                
                   IconButton(
                     icon:Icon(Icons.delete, color: Colors.redAccent),
                     onPressed: (){
@@ -108,8 +95,6 @@ class _GiftsScreenState extends State<GiftsScreen> {
                                   },                  
                     
                     ),
-                  
-                  //End of what I have added
                 ],
               ),
             );
@@ -127,8 +112,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
   }
 
 getGifts(token)async{
-    List<Gift> result = await helper.getListGifts(widget.currentPerson,token); 
-    //print(result);   
+    List<Gift> result = await helper.getListGifts(widget.currentPerson,token);      
     setState(() {
       gifts = result;
     });    
@@ -138,8 +122,8 @@ getGifts(token)async{
       return showDialog<String>(
                                                 context: context,
                                                 builder: (BuildContext context) => AlertDialog(
-                                                  title: const Text('AlertDialog Title'),
-                                                  content: const Text('AlertDialog description'),
+                                                  title: const Text('Delete Confirmation'),
+                                                  content: const Text('Are you sure you want to delete this gift?'),
                                                   actions: <Widget>[
                                                     TextButton(
                                                       onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -147,8 +131,7 @@ getGifts(token)async{
                                                     ),
                                                     TextButton(
                                                       onPressed: () {
-                                                          Navigator.pop(context, 'Yes');
-                                                         // print('wonderful');                                                        
+                                                          Navigator.pop(context, 'Yes');                                                                                                               
                                                         },
                                                       child: const Text('Yes'),
                                                     ),
