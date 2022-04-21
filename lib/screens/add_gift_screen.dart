@@ -8,11 +8,13 @@ class AddGiftScreen extends StatefulWidget {
       required this.nav,
       required this.currentPerson,
       required this.currentPersonName,
+      required this.logout,
       required this.addGift})
       : super(key: key);
 
   Function nav;
   Function addGift;
+  Function logout;
   String currentPersonName; // could be empty string
   String currentPerson; //could be zero
 

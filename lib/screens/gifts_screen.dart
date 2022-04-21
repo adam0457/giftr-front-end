@@ -21,7 +21,7 @@ class GiftsScreen extends StatefulWidget {
   String currentPerson; //the id of the current person
   String currentPersonName;
   Function(Enum) goPeople;
-  Function(Enum) logout;
+  Function logout;
   Function addGift;
   Function deleteGift;
   String? token;
@@ -58,7 +58,7 @@ class _GiftsScreenState extends State<GiftsScreen> {
             icon: Icon(Icons.logout),
             onPressed: () {
               //logout and return to login screen
-              widget.logout(Screen.LOGIN);
+              widget.logout();
             },
           )
         ],

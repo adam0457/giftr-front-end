@@ -12,7 +12,8 @@ class AddPersonScreen extends StatefulWidget {
     required this.personDOB,
     required this.addPerson,
     required this.editPerson,
-    required this.deletePerson
+    required this.deletePerson,
+    required this.logout
   }) : super(key: key);
 
   Function nav;
@@ -22,6 +23,7 @@ class AddPersonScreen extends StatefulWidget {
   Function addPerson;
   Function editPerson;
   Function deletePerson;
+  Function logout;
 
   @override
   State<AddPersonScreen> createState() => _AddPersonScreenState();

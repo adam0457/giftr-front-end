@@ -63,7 +63,7 @@ class _MainPageState extends State<MainPage> {
         //break;
       case Screen.PEOPLE:
         return PeopleScreen(
-          token:token,
+          token:token,          
           goGifts: (String pid, String name) {           
             print('from people to gifts for person $pid');
             setState(() {
@@ -82,22 +82,18 @@ class _MainPageState extends State<MainPage> {
               currentScreen = Screen.ADDPERSON;
             });
           },
-          logout: (Enum screen) {
-            //back to people
-            setState(() => currentScreen = Screen.LOGIN);
-          },
+          logout: logout,          
           
         );
       case Screen.GIFTS:
         return GiftsScreen(
             token:token,
+            
             goPeople: (Enum screen) {
               //back to people
               setState(() => currentScreen = Screen.PEOPLE);
             },
-            logout: (Enum screen) {
-              setState(() => currentScreen = Screen.LOGIN);
-            },
+            logout: logout,
             addGift: () {
               //delete gift idea and update state
               setState(() => currentScreen = Screen.ADDGIFT);
@@ -117,7 +113,8 @@ class _MainPageState extends State<MainPage> {
           personDOB: currentPersonDOB,
           addPerson:addPerson,
           editPerson:editPerson,
-          deletePerson:deletePerson
+          deletePerson:deletePerson,
+          logout: logout,
         );
       case Screen.ADDGIFT:
         return AddGiftScreen(
@@ -128,7 +125,8 @@ class _MainPageState extends State<MainPage> {
           },
           currentPerson: currentPerson,
           currentPersonName: currentPersonName,
-          addGift:addGift
+          addGift:addGift,
+          logout: logout
         );
       default:
         return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);
@@ -154,6 +152,14 @@ class _MainPageState extends State<MainPage> {
     saveToken(token);
     setState(() => currentScreen = Screen.PEOPLE);
     getCurrentUser(token);
+  }
+
+  logout(){
+    setState((){
+        currentScreen = Screen.LOGIN;
+        token = '';
+        currentUserId = '';
+      });
   }
 
   getCurrentUser(token) async{

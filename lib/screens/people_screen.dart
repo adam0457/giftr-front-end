@@ -16,7 +16,7 @@ class PeopleScreen extends StatefulWidget {
 
   Function(String, String) goGifts;
   Function(String, String, DateTime) goEdit;
-  Function(Enum) logout;
+  Function logout;
   String? token;
   
 
@@ -52,7 +52,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
             icon: Icon(Icons.logout),
             onPressed: () {
               //logout and return to login screen
-              //widget.logout(Screen.LOGIN);
+              widget.logout();
             },
           )
         ],
