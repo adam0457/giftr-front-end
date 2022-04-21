@@ -7,10 +7,12 @@ class AddGiftScreen extends StatefulWidget {
       {Key? key,
       required this.nav,
       required this.currentPerson,
-      required this.currentPersonName})
+      required this.currentPersonName,
+      required this.addGift})
       : super(key: key);
 
   Function nav;
+  Function addGift;
   String currentPersonName; // could be empty string
   String currentPerson; //could be zero
 
@@ -21,11 +23,12 @@ class AddGiftScreen extends StatefulWidget {
 class _AddGiftScreenState extends State<AddGiftScreen> {
   final nameController = TextEditingController();
   final storeController = TextEditingController();
+  final urlController = TextEditingController();
   final priceController = TextEditingController();
   //create global ref key for the form
   final _formKey = GlobalKey<FormState>();
   //state value for user login
-  Map<String, dynamic> gift = {'name': '', 'store': '', 'price': 0.00};
+  Map<String, dynamic> gift = {'name': '', 'store': '', 'url':'','price': 0};
 
   @override
   Widget build(BuildContext context) {
@@ -44,25 +47,40 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildName(),
-              SizedBox(height: 16),
-              _buildStore(),
-              SizedBox(height: 16),
-              _buildPrice(),
-              SizedBox(height: 16),
-              ElevatedButton(
-                child: Text('Save'),
-                onPressed: () {
-                  //use the API to save the new gift for the person
-                  //after confirming the save then
-                  //go to the gifts screen
-                  widget.nav(Screen.GIFTS);
-                },
-              ),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildName(),
+                SizedBox(height: 16),
+                _buildStore(),
+                SizedBox(height: 16),
+                _buildUrl(),
+                SizedBox(height: 16),
+                _buildPrice(),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  child: Text('Save'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()){
+                      _formKey.currentState!.save();
+                        //print(gift);
+                        widget.addGift(gift);
+                        widget.nav(Screen.GIFTS);
+                    }else {
+                                //form failed validation so exit
+                                return;
+                              }
+                    
+                    //use the API to save the new gift for the person
+                    //after confirming the save then
+                    //go to the gifts screen
+                  
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -88,7 +106,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
       textInputAction: TextInputAction.next,
       style: TextStyle(color: Colors.lightBlue, fontSize: 20),
       validator: (String? value) {
-        print('called validator in email');
+       // print('called validator in email');
         if (value == null || value.isEmpty) {
           return 'Please enter something';
           //becomes the new errorText value
@@ -106,14 +124,14 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
 
   TextFormField _buildStore() {
     return TextFormField(
-      decoration: _styleField('Store URL', 'Store URL'),
+      decoration: _styleField('Store name', 'Store name'),
       controller: storeController,
       obscureText: false,
       keyboardType: TextInputType.url,
       textInputAction: TextInputAction.next,
       style: TextStyle(color: Colors.lightBlue, fontSize: 20),
       validator: (String? value) {
-        print('called validator in store url');
+       // print('called validator in store url');
         if (value == null || value.isEmpty) {
           return 'Please enter something';
           //becomes the new errorText value
@@ -124,6 +142,31 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
         //save the email value in the state variable
         setState(() {
           gift['store'] = value;
+        });
+      },
+    );
+  }
+
+   TextFormField _buildUrl() {
+    return TextFormField(
+      decoration: _styleField('Store URL', 'Store URL'),
+      controller: urlController,
+      obscureText: false,
+      keyboardType: TextInputType.url,
+      textInputAction: TextInputAction.next,
+      style: TextStyle(color: Colors.lightBlue, fontSize: 20),
+      validator: (String? value) {
+       // print('called validator in store url');
+        if (value == null || value.isEmpty) {
+          return 'Please enter something';
+          //becomes the new errorText value
+        }
+        return null; //means all is good
+      },
+      onSaved: (String? value) {
+        //save the email value in the state variable
+        setState(() {
+          gift['url'] = value;
         });
       },
     );
@@ -148,7 +191,7 @@ class _AddGiftScreenState extends State<AddGiftScreen> {
         //save the email value in the state variable
         setState(() {
           if (value != null) {
-            gift['name'] = num.parse(value);
+            gift['price'] = num.parse(value);
           }
         });
       },

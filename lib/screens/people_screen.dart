@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../data/person.dart';
-import 'dart:async'; //for Future
-//import 'dart:math'; //for Random
+import 'dart:async'; 
 import '../data/http_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON }
 
 class PeopleScreen extends StatefulWidget {
   PeopleScreen(
@@ -28,32 +25,15 @@ class PeopleScreen extends StatefulWidget {
 }
 
 class _PeopleScreenState extends State<PeopleScreen> {
-  //state var list of people
-  //real app will be using the API to get the data
-  //Future<List<Person>> people =  Future(() => <Person>[]);
+
   List<Person> people = <Person>[];
-  // List<Map<String, dynamic>> people = [
-  //   {'id': 11, 'name': 'Bobby Singer', 'dob': DateTime(1947, 5, 4)},
-  //   {'id': 13, 'name': 'Crowley', 'dob': DateTime(1661, 12, 4)},
-  //   {'id': 12, 'name': 'Sam Winchester', 'dob': DateTime(1983, 5, 2)},
-  //   {'id': 10, 'name': 'Dean Winchester', 'dob': DateTime(1979, 1, 24)},
-  // ];
+
   DateTime today = DateTime.now();
   String? jwt = "Initial value of jwt";
-   HttpHelper helper = HttpHelper();
+  HttpHelper helper = HttpHelper();
   void initState() {
-    super.initState();
-    print('hellloooo');
-    print(widget.token);
-    getPeople(widget.token); 
-    //print(people);
-   //final myFuture = Future<void>.delayed(Duration(seconds: 5),() => print(people));
-   
-    // setState(() {
-       // people = data;
-        //print('Got ${users.length} FutureBuilder users.');
-      //});
-
+    super.initState();  
+    getPeople(widget.token);
   }
 
   @override
@@ -125,26 +105,13 @@ class _PeopleScreenState extends State<PeopleScreen> {
   }
 
     getPeople(token)async{
-    List<Person> result = await helper.getListPeople(token);
+        List<Person> result = await helper.getListPeople(token);
+        
+        //print(people);
+        setState(() {
+          people = result;
+        });
     
-    //print(people);
-     setState(() {
-      people = result;
-    });
-    
-  }
-
-  // getToken() async{
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final String? mytoken = prefs.getString('token');
-  //   Future<void>.delayed(Duration(seconds: 5), () {
-  //     //setState(() {
-  //       //jwt = mytoken;
-  //       print(mytoken);
-                
-  //    // });
-  //   });
-  
-  // }
+    }  
 
 }

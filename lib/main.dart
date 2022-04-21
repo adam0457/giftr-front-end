@@ -13,6 +13,7 @@ import '../screens/add_gift_screen.dart';
 import '../data/http_helper.dart';
 import '../data/user.dart';
 import '../data/person.dart';
+import '../data/gift.dart';
 
 enum Screen { LOGIN, PEOPLE, GIFTS, ADDGIFT, ADDPERSON, REGISTER }
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //put the things that are the same on every page here...
+  
     return MaterialApp(
       home: MainPage(),
     );
@@ -31,9 +32,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MainPage extends StatefulWidget {
-  //stateful widget for the main page container for all pages
-  // we do this to keep track of current page at the top level
-  // the state information can be passed to the BottomNav()
   MainPage({Key? key}) : super(key: key);
 
   @override
@@ -47,9 +45,8 @@ class _MainPageState extends State<MainPage> {
   DateTime currentPersonDOB = DateTime.now(); //right now as default
   String? token;
   String? currentUserId;
-  
 
-  // to access variables from MainPage use `widget.`
+  
   @override
   Widget build(BuildContext context) {
     return loadBody(currentScreen);
@@ -59,10 +56,10 @@ class _MainPageState extends State<MainPage> {
     switch (screen) {
       case Screen.REGISTER:
         return RegisterScreen(registerUser: registerUser);
-        break;
+        //break;
       case Screen.LOGIN:
             return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);       
-        break;
+        //break;
       case Screen.PEOPLE:
         return PeopleScreen(
           token:token,
@@ -92,7 +89,7 @@ class _MainPageState extends State<MainPage> {
         );
       case Screen.GIFTS:
         return GiftsScreen(
-           token:token,
+            token:token,
             goPeople: (Enum screen) {
               //back to people
               setState(() => currentScreen = Screen.PEOPLE);
@@ -129,6 +126,7 @@ class _MainPageState extends State<MainPage> {
           },
           currentPerson: currentPerson,
           currentPersonName: currentPersonName,
+          addGift:addGift
         );
       default:
         return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);
@@ -169,8 +167,7 @@ class _MainPageState extends State<MainPage> {
 
   addPerson(Map<String, dynamic> person) async{
     HttpHelper helper = HttpHelper();
-    Person newPerson =  await helper.createPerson(person,currentUserId,token); 
-   // print(newPerson);
+    Person newPerson =  await helper.createPerson(person,currentUserId,token);   
   }
 
   editPerson(Map<String, dynamic> person) async {
@@ -181,6 +178,11 @@ class _MainPageState extends State<MainPage> {
   deletePerson() async {
     HttpHelper helper = HttpHelper();   
     Person personEdited =  await helper.deletePerson(currentPerson,token);
+  }
+
+  addGift(Map<String, dynamic> gift) async{
+    HttpHelper helper = HttpHelper();     
+      await helper.createGift(gift,currentPerson,token);   
   }
 
 }

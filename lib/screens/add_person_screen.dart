@@ -79,10 +79,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
                     child: Text('Save'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                            //use the API to save the new person
-                          //go to the people screen
-                          print(person);
+                        _formKey.currentState!.save();                           
                           widget.currentPersonName.isEmpty
                           ? widget.addPerson(person)
                           :widget.editPerson(person);
@@ -135,7 +132,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
     );
   }
 
- 
+
 
   TextFormField _buildName() {
     return TextFormField(
@@ -152,8 +149,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
         }        
         return null; //means all is good
       },
-      onSaved: (String? value) {
-        //save the email value in the state variable
+      onSaved: (String? value) {       
         setState(() {
           person['name'] = value;
         });
@@ -194,8 +190,7 @@ class _AddPersonScreenState extends State<AddPersonScreen> {
         }
         return null; //means all is good
       },
-      onSaved: (String? value) {
-        //save the email value in the state variable
+      onSaved: (String? value) {       
         setState(() {
           person['dob'] = value;
         });
