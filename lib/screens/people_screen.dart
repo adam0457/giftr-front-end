@@ -65,7 +65,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
         itemBuilder: (context, index) {
           return ListTile(
           
-            tileColor: today.month >= people[index].birthDate.month && DateTime.parse(todayInString).day >= DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(people[index].birthDate)).day
+            tileColor: (today.month >= people[index].birthDate.month && DateTime.parse(todayInString).day >= DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(people[index].birthDate)).day)
                 ? Colors.black12
                 : Colors.white,
             title: Text(people[index].name),

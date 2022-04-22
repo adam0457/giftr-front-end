@@ -14,7 +14,7 @@ class HttpHelper {
         String endpoint = 'auth/users';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'My name',
+          'x-api-key': 'adam0457 and bhuk0001',
           'content-type': 'application/json', 
         };
       Map<String, dynamic> user = {
@@ -47,7 +47,7 @@ class HttpHelper {
       String endpoint = 'auth/tokens';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'my name',
+        'x-api-key': 'adam0457 and bhuk0001',
           'content-type': 'application/json', 
         };
       Map<String, dynamic> connectUser = {
@@ -83,7 +83,7 @@ class HttpHelper {
     String endpoint = 'api/people';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'my name',          
+          'x-api-key': 'adam0457 and bhuk0001',         
           'Authorization':'Bearer $token'
         };  
       
@@ -117,8 +117,8 @@ class HttpHelper {
       String endpoint = 'auth/users/me';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'adam0457 eshwar',
-          'content-type': 'application/json', 
+          'x-api-key': 'adam0457 and bhuk0001',
+          //'content-type': 'application/json', 
           'Authorization':'Bearer $token'
         };  
       
@@ -142,7 +142,7 @@ class HttpHelper {
       String endpoint = 'api/people';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'adam0457 Eswhar',
+          'x-api-key': 'adam0457 and bhuk0001',
           'content-type': 'application/json', 
           'Authorization':'Bearer $token'
         };
@@ -183,7 +183,7 @@ class HttpHelper {
       String endpoint = 'api/people/$personId';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'adam0457 Eswhar',
+          'x-api-key': 'adam0457 and bhuk0001',
           'content-type': 'application/json', 
           'Authorization':'Bearer $token'
         };
@@ -224,7 +224,7 @@ class HttpHelper {
       String endpoint = 'api/people/$personId';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'adam0457 Eswhar',
+          'x-api-key': 'adam0457 and bhuk0001',
           'content-type': 'application/json', 
           'Authorization':'Bearer $token'
         };      
@@ -254,7 +254,7 @@ class HttpHelper {
     String endpoint = 'api/people/$personId/gifts';
         Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
         Map<String, String> headers = {
-          'x-my-header': 'my name',
+          'x-api-key': 'adam0457 and bhuk0001',
           'Authorization':'Bearer $token'
         };  
       
@@ -289,7 +289,7 @@ class HttpHelper {
       String endpoint = 'api/people/$personId/gifts';
         Uri uri = Uri.http(domain,endpoint); //Uri in dart:core
         Map<String, String> headers = {
-          'x-my-header': 'adam0457 Eswhar',
+          'x-api-key': 'adam0457 and bhuk0001',
           'content-type': 'application/json', //because we want to send JSON
           'Authorization':'Bearer $token'
         };
@@ -331,7 +331,7 @@ class HttpHelper {
       String endpoint = 'api/people/$personId/gifts/$giftId';
         Uri uri = Uri.http(domain,endpoint); 
         Map<String, String> headers = {
-          'x-my-header': 'adam0457 Eswhar',
+          'x-api-key': 'adam0457 and bhuk0001',
           'content-type': 'application/json', 
           'Authorization':'Bearer $token'
         };      
