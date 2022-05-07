@@ -56,7 +56,7 @@ class _MainPageState extends State<MainPage> {
   Widget loadBody(Enum screen) {
     switch (screen) {
       case Screen.REGISTER:
-        return RegisterScreen(registerUser: registerUser);
+        return RegisterScreen(registerUser: registerUser, logout:logout);
         //break;
       case Screen.LOGIN:
             return LoginScreen(loginUser: loginUser, goToRegister:goToRegister);       
