@@ -4,8 +4,9 @@ import '../data/http_helper.dart';
 import '../data/user.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key? key, required this.registerUser}) : super(key: key);
+  RegisterScreen({Key? key, required this.registerUser, required this.logout}) : super(key: key);
   Function registerUser;
+  Function logout;
 
 
   @override
@@ -27,8 +28,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.home),
+          onPressed: () {widget.logout();},
+          icon: Icon(Icons.arrow_back),
         ),
           title: Text('The Register Screen'),
           centerTitle: true,
